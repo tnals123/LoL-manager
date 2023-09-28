@@ -22,7 +22,7 @@ environment:
   sdk: ">=2.17.0 <3.0.0"
 
 
-# Dependencies specify other packages that your package needs in order to work.
+# Dependencies specify other packages trhat your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
 # dependencies can be manually updated by changing the version numbers below to
@@ -36,6 +36,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:

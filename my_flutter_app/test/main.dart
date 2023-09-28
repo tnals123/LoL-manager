@@ -6,22 +6,17 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:my_flutter_app/pickPage.dart';
-import 'package:get/get.dart';
-import 'package:flutter/services.dart';
+import 'package:my_flutter_app/main.dart';
 
-
-void main(){
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
-  runApp(MyApp2());
-}
+void main() => runApp(MyApp2());
 
 class MyApp2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      debugShowCheckedModeBanner : false,
-      title: 'League of Legends Pick Game',
+      title: 'Flutter Demoㄱㅇㄱㅇㄱㅇㄱㅇㄱㅇ',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
