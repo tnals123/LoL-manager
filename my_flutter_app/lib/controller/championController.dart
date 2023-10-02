@@ -1,5 +1,7 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
+import '/class/champion.dart';
 import 'package:get/get.dart';
-import 'class/champion.dart';
 
 class ChampionsController extends GetxController {
   var champions = <Champion>[].obs;
@@ -7,13 +9,19 @@ class ChampionsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchChampionsData();
+    fetchChampionsFromAsset();
   }
 
-  Future<void> fetchChampionsData() async {
+  Future<void> fetchChampionsFromAsset() async {
     try {
-      List<Champion> championsData = await fetchChampionsFromAPI();
+
+      final jsonString = await rootBundle.loadString('assets/champions.json');
+      final Map<String, dynamic> jsonResponse = json.decode(jsonString);
+      var championsMap = jsonResponse['data'] as Map<String, dynamic>;
+      List<Champion> championsData =
+          championsMap.values.map((e) => Champion.fromJson(e)).toList();
       champions.value = championsData;
+
     } catch (e) {
       print(e);
     }

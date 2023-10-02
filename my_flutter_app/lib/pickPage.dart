@@ -20,6 +20,7 @@ class PickPage extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Column(
         children: [
+          _buildTeamNamesSection(), // 팀 이름 부분 추가
           _buildBanSection(),
           Expanded(
             child: Row(
@@ -35,11 +36,31 @@ class PickPage extends StatelessWidget {
     );
   }
 
+  Widget _buildTeamNamesSection() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "팀 A",
+            style: TextStyle(color: Colors.white, fontSize: 24),
+          ),
+          Text(
+            "팀 B",
+            style: TextStyle(color: Colors.white, fontSize: 24),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   Widget _buildBanSection() {
     return Row(
       children: [
         Expanded(child: _buildBannedChampions(true)),
-        Expanded(
+        const Expanded(
           flex: 2,
           child: Column(
             children: [
@@ -56,7 +77,7 @@ class PickPage extends StatelessWidget {
   Widget _buildBannedChampions(bool isLeftSide) {
     return Row(
       mainAxisAlignment: isLeftSide ? MainAxisAlignment.start : MainAxisAlignment.end,
-      children: List.generate(5, (index) => Icon(Icons.block, color: Colors.red)),
+      children: List.generate(5, (index) => const Icon(Icons.block, color: Colors.red)),
     );
   }
 
@@ -67,10 +88,10 @@ class PickPage extends StatelessWidget {
         final playerIndex = isLeftSide ? index : index + 5;
         return Column(
           children : [
-            SizedBox(height : 10),
+            const SizedBox(height : 10),
             _buildPlayerItem(playerIndex, isLeftSide),
-            SizedBox(height:10),
-            Divider(color : Colors.yellow)
+            const SizedBox(height:10),
+            const Divider(color : Colors.yellow)
           ]
         );
       },
@@ -80,19 +101,19 @@ class PickPage extends StatelessWidget {
   Widget _buildPlayerItem(int playerIndex, bool isLeftSide) {
     return Container(
       height: 60, 
-      padding: EdgeInsets.symmetric(horizontal: 16.0), 
+      padding: const EdgeInsets.symmetric(horizontal: 16.0), 
       child: Row(
         mainAxisAlignment: 
             isLeftSide ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: [
           if (!isLeftSide) ...[ 
-            Text('Player ${playerIndex + 1}', style: TextStyle(color: Colors.white)),
-            SizedBox(width: 10),
+            Text('Player ${playerIndex + 1}', style: const TextStyle(color: Colors.white)),
+            const SizedBox(width: 10),
           ],
           Container(
             width: 75.0, 
             height: 75.0, 
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Colors.blue,
               shape: BoxShape.circle,
             ),
@@ -103,8 +124,8 @@ class PickPage extends StatelessWidget {
             ),
           ),
           if (isLeftSide) ...[ 
-            SizedBox(width: 10),
-            Text('Player ${playerIndex + 1}', style: TextStyle(color: Colors.white)),
+            const SizedBox(width: 10),
+            Text('Player ${playerIndex + 1}', style: const TextStyle(color: Colors.white)),
           ],
           
         ],
@@ -118,8 +139,13 @@ class PickPage extends StatelessWidget {
         Row(
           children: [
             for (int i = 0; i < 5; i++) ...[
-              Icon(Icons.shield),
-              SizedBox(width: 10),
+              SizedBox(
+                  width:10,
+                  height: 10,
+                            ),
+
+
+              const SizedBox(width: 10),
             ],
             Expanded(
               child: TextField(
@@ -127,7 +153,7 @@ class PickPage extends StatelessWidget {
                   hintText: '챔피언 검색',
                   fillColor: Colors.grey[800],
                   filled: true,
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
               ),
             )
@@ -142,14 +168,11 @@ class PickPage extends StatelessWidget {
   final controller = Get.put(ChampionsController());
 
   return Obx(() {
-    if (controller.champions.isEmpty) {
-      return Center(child: CircularProgressIndicator());
-    } else {
       return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 7,
+          crossAxisSpacing: 5,
+          mainAxisSpacing: 5,
           childAspectRatio: 2 / 3,
         ),
         itemCount: controller.champions.length,
@@ -157,25 +180,24 @@ class PickPage extends StatelessWidget {
           Champion champion = controller.champions[index];
           return Column(
             children: [
-              ClipOval(
+              Container(
                 child: Image.network(
-                  'https://ddragon.leagueoflegends.com/cdn/11.22.1/img/champion/${champion.image}',
-                  width: 60,
-                  height: 60,
+                  'https://ddragon.leagueoflegends.com/cdn/11.22.1/img/champion/${champion.id}.png',
+                  width: 65,
+                  height: 65,
                   fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 champion.name,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12,color: Colors.white),
               ),
             ],
           );
         },
       );
-    }
   });
 }
 }
