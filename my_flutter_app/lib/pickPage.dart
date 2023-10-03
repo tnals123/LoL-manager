@@ -141,7 +141,7 @@ class PickPage extends StatelessWidget {
             for (int i = 0; i < 5; i++) ...[
               SizedBox(
                   width:10,
-                  height: 10,
+                  height: 12,
                             ),
 
 
