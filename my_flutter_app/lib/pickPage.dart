@@ -11,8 +11,17 @@ class ChampionController extends GetxController {
   }
 }
 
+
 class PickPage extends StatelessWidget {
   final championController = Get.put(ChampionController());
+
+  final List<String> roleImages = [
+  'assets/image/top.png',
+  'assets/image/jungle.png',
+  'assets/image/mid.png',
+  'assets/image/bottom.png',
+  'assets/image/supporter.png',
+];
 
   @override
   Widget build(BuildContext context) {
@@ -150,9 +159,13 @@ class PickPage extends StatelessWidget {
           Container(
             width: 75.0, 
             height: 75.0, 
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.blue,
               shape: BoxShape.circle,
+              image: DecorationImage(
+              image: AssetImage(roleImages[playerIndex % 5]), // 이미지를 가져옵니다.
+              fit: BoxFit.cover,
+            ),
             ),
             child: Center(
               child: Obx(() {
@@ -229,7 +242,7 @@ class PickPage extends StatelessWidget {
                   ),
                 ),
                 child: Image.network(
-                  'https://ddragon.leagueoflegends.com/cdn/11.22.1/img/champion/${champion.id}.png',
+                  'https://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${champion.id}.png',
                     fit: BoxFit.cover,
                   ),
                 ),
