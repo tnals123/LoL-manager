@@ -65,7 +65,6 @@ class PickPage extends StatelessWidget {
           child: Column(
             children: [
               Text('다른 플레이어를 기다려 주세요'),
-              LinearProgressIndicator(value: 0.7, color: Colors.red)
             ],
           ),
         ),
@@ -75,28 +74,66 @@ class PickPage extends StatelessWidget {
   }
 
   Widget _buildBannedChampions(bool isLeftSide) {
-    return Row(
-      mainAxisAlignment: isLeftSide ? MainAxisAlignment.start : MainAxisAlignment.end,
-      children: List.generate(5, (index) => const Icon(Icons.block, color: Colors.red)),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: isLeftSide ? MainAxisAlignment.start : MainAxisAlignment.end,
+          children: List.generate(
+            5,
+            (index) => Row(
+              children: [
+                SizedBox(
+                  width: 40.0,
+                  height: 40.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: const Color(0xFF474545), // 회색 테두리
+                        width: 1.0, // 테두리 두께
+                      ),
+                    ),
+                    child: Image.asset('assets/image/beforeBan.png'),
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10), // 간격 조정
+        const LinearProgressIndicator(value: 0.7, color: Colors.red), // 추가된 LinearProgressIndicator
+      ],
     );
   }
-
   Widget _buildPlayerList(bool isLeftSide) {
     return ListView.builder(
       itemCount: 5,
       itemBuilder: (context, index) {
         final playerIndex = isLeftSide ? index : index + 5;
-        return Column(
-          children : [
-            const SizedBox(height : 10),
-            _buildPlayerItem(playerIndex, isLeftSide),
-            const SizedBox(height:10),
-            const Divider(color : Colors.yellow)
-          ]
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return Column(
+              children: [
+                const SizedBox(height: 10),
+                _buildPlayerItem(playerIndex, isLeftSide),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: isLeftSide ? Alignment.centerLeft : Alignment.centerRight,
+                  child: Container(
+                    width: constraints.maxWidth - 50,  // 전체 너비에서 50을 뺀다.
+                    child: Divider(
+                      color: Color(0xFF9d8d7f),
+                      thickness: 0.5,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );
-  }
+}
 
   Widget _buildPlayerItem(int playerIndex, bool isLeftSide) {
     return Container(
@@ -139,13 +176,14 @@ class PickPage extends StatelessWidget {
         Row(
           children: [
             for (int i = 0; i < 5; i++) ...[
-              SizedBox(
-                  width:10,
-                  height: 10,
-                            ),
+              Container(
+                width:15,
+                height:15,
+                child: Image.asset('assets/image/beforeBan.png'),
+              ),
 
-
-              const SizedBox(width: 10),
+    
+              const SizedBox(width: 20),
             ],
             Expanded(
               child: TextField(
@@ -180,12 +218,20 @@ class PickPage extends StatelessWidget {
           Champion champion = controller.champions[index];
           return Column(
             children: [
-              Container(
+              SizedBox(
+              width: 70.0,
+              height: 70.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.red, // 회색 테두리
+                    width: 1.0, // 테두리 두께
+                  ),
+                ),
                 child: Image.network(
                   'https://ddragon.leagueoflegends.com/cdn/11.22.1/img/champion/${champion.id}.png',
-                  width: 65,
-                  height: 65,
-                  fit: BoxFit.cover,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
