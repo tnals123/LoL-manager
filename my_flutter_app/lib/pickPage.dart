@@ -3,37 +3,48 @@ import 'package:get/get.dart';
 import 'package:my_flutter_app/widget/bansWidget.dart';
 import 'package:my_flutter_app/widget/timeBar.dart';
 import 'package:my_flutter_app/widget/championGrid.dart';
+import 'package:my_flutter_app/controller/championController.dart';
 
 //flutter run -d web-server --web-port 8080
 // lsof -i :8080
 // kill -9 8080
 
-class ChampionController extends GetxController {
-  var selectedChampions = List<String?>.filled(10, null).obs;
-
-  void selectChampion(int index, String championName) {
-    selectedChampions[index] = championName;
-  }
-}
-
-class PickPage extends StatelessWidget {
-  final championController = Get.put(ChampionController());
-
-  final List<String> roleImages = [
+String _getImageForPlayer(int playerIndex, bool isBlueTeam) {
+  List<String> blueTeamOrder = [    
+    'assets/image/supporter.png',
+    'assets/image/bottom.png',
+    'assets/image/mid.png',
+    'assets/image/jungle.png',
+    'assets/image/top.png'];
+  List<String> redTeamOrder = [
     'assets/image/top.png',
     'assets/image/jungle.png',
     'assets/image/mid.png',
     'assets/image/bottom.png',
-    'assets/image/supporter.png',
+    'assets/image/supporter.png'
   ];
+
+  if (isBlueTeam) {
+    return blueTeamOrder[playerIndex];
+  } else {
+    return redTeamOrder[playerIndex];
+  }
+}
+
+
+class PickPage extends StatelessWidget {
+  final championController = Get.put(ChampionsController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.9),
-      body: Column(
+      body: Stack(children: [ Column(
         children: [
-          const SizedBox(height: 30),
+                Obx(() => championController.showBlueTeamBoxes.value 
+            ? _buildTeamBoxes(isBlueTeam: true) : Container()), // 블루팀 박스
+      Obx(() => championController.showRedTeamBoxes.value 
+            ? _buildTeamBoxes(isBlueTeam: false) : Container()), 
           Expanded(
               flex: 4,
               child: Row(
@@ -42,10 +53,19 @@ class PickPage extends StatelessWidget {
                     flex: 3,
                     child: SizedBox(),
                   ),
-                  Expanded(flex: 4, child: ChampionsView()),
+                  Expanded(flex: 4, child:
+                  Expanded(
+                    flex: 4,
+                      child: Transform.translate(
+                        offset: Offset(0, 50), // y축으로 50 만큼 이동
+                        child: ChampionsView(),
+                      ),
+            
+                  ),),
                   const Expanded(flex: 3, child: SizedBox())
                 ],
               )),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [BansWidget(),BansWidget()],
@@ -54,12 +74,12 @@ class PickPage extends StatelessWidget {
           Expanded(
               flex: 1,
               child: Container(
-                color: const Color(0xFF1D1728),
+                color: const Color(0xFF171220),
                 child: Row(
                   // 팀 박스들이 모인 부분을 Row로 변경
                   children: [
-                    Expanded(flex: 1, child: _buildPlayerList(true)), // 파란팀
-                    Container(
+                    Expanded(flex: 5, child: _buildPlayerList(true)), // 파란팀
+                    Expanded(flex : 2,child:Container(
                       alignment: Alignment.center,
                       margin: const EdgeInsets.only(top: 10, bottom: 10),
                       width: 300,
@@ -73,17 +93,37 @@ class PickPage extends StatelessWidget {
                         ),
                       ),
                       child: _buildTeamNamesSection(),
-                    ),
-                    Expanded(flex: 1, child: _buildPlayerList(false)), // 빨간팀
+                    ),),
+
+                    Expanded(flex: 5, child: _buildPlayerList(false)), // 빨간팀
                   ],
                 ),
               )),
         ],
-      ),
+      ),],)
     );
   }
 
-
+  Widget _buildTeamBoxes({required bool isBlueTeam}) {
+    // 박스를 표시하는 위젯 구현
+    return Container(
+      width: double.infinity,
+      height: 200, // 박스 높이 설정
+      child: ListView.builder(
+        itemCount: 5, // 5개의 박스
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          // 박스 내용 구현
+          return Container(
+            width: 100,
+            margin: EdgeInsets.all(10),
+            color: isBlueTeam ? Colors.blue : Colors.red,
+            // 여기에 선수 정보 등 추가
+          );
+        },
+      ),
+    );
+  }
 
   Widget _buildTeamNamesSection() {
     return const Column(
@@ -123,58 +163,6 @@ class PickPage extends StatelessWidget {
     );
   }
 
-  Widget _buildBanSection() {
-    return Row(
-      children: [
-        Expanded(child: _buildBannedChampions(true)),
-        const Expanded(
-          flex: 2,
-          child: Column(
-            children: [
-              Text('다른 플레이어를 기다려 주세요'),
-            ],
-          ),
-        ),
-        Expanded(child: _buildBannedChampions(false)),
-      ],
-    );
-  }
-
-  Widget _buildBannedChampions(bool isLeftSide) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment:
-              isLeftSide ? MainAxisAlignment.start : MainAxisAlignment.end,
-          children: List.generate(
-            5,
-            (index) => Row(
-              children: [
-                SizedBox(
-                  width: 40.0,
-                  height: 40.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0xFF474545), // 회색 테두리
-                        width: 1.0, // 테두리 두께
-                      ),
-                    ),
-                    child: Image.asset('assets/image/beforeBan.png'),
-                  ),
-                ),
-                const SizedBox(width: 10),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 10), // 간격 조정
-        const LinearProgressIndicator(value: 0.7, color: Colors.red),
-        const SizedBox(height: 10) // 추가된 LinearProgressIndicator
-      ],
-    );
-  }
-
   Widget _buildPlayerList(bool isBlueTeam) {
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10), // 여기에서 패딩 적용
@@ -194,77 +182,66 @@ class PickPage extends StatelessWidget {
     );
 }
 
-
-  Widget _buildPlayerItem(int playerIndex, bool isBlueTeam) {
-    return Container(
-      color: const Color(0xFF1D1728),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Obx(() {
-              final championId =
-                  championController.selectedChampions[playerIndex];
-              if (championId != null) {
-                return Transform.scale(
-                  scale: 0.95,
-                  child: Image.network(
-                    'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg',
-                    fit: BoxFit.cover,
-                    alignment: const Alignment(0, -0.68),
-                  ),
-                );
-              } else {
-                return Container();
-              }
-            }),
-          ),
-          Align(
-            alignment:
-                isBlueTeam ? Alignment.centerLeft : Alignment.centerRight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 10),
-                Text('Player ${playerIndex + 1}',
-                    style: const TextStyle(color: Colors.white)),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildChampionSelection() {
-    return Column(
+ Widget _buildPlayerItem(int playerIndex, bool isBlueTeam) {
+    final championController = Get.put(ChampionsController());
+  return Container(
+    color: const Color(0xFF171220),
+    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+    child: Stack(
       children: [
-        Row(
-          children: [
-            // for (int i = 0; i < 5; i++) ...[
-            //   Container(
-            //     width: 15,
-            //     height: 15,
-            //     child: Image.asset('assets/image/beforeBan.png'),
-            //   ),
-            //   const SizedBox(width: 20),
-            // ],
-            // Expanded(
-            //   child: TextField(
-            //     decoration: InputDecoration(
-            //       hintText: '챔피언 검색',
-            //       fillColor: Colors.grey[800],
-            //       filled: true,
-            //       border: const OutlineInputBorder(),
-            //     ),
-            //   ),
-            // )
-          ],
+        // 플레이어 위치에 따른 이미지
+            Align(
+      alignment: Alignment.topRight,
+      child: InkWell(
+        onTap: () => championController.toggleTeamBoxes(isBlueTeam),
+        child: Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Colors.blueGrey, // 버튼 배경 색
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.add, size: 18, color: Colors.white), // 버튼 아이콘
+        ))),
+        Align(
+          alignment: Alignment.center,
+          child: Image.asset(_getImageForPlayer(playerIndex, isBlueTeam)),
         ),
-        Expanded(child: ChampionsView()),
+        Positioned.fill(
+          child: Obx(() {
+            final championId =
+                championController.selectedChampions[playerIndex];
+            if (championId != null) {
+              return Transform.scale(
+                scale: 0.95,
+                child: Image.network(
+                  'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg',
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0, -0.68),
+                ),
+              );
+            } else {
+              return Container();
+            }
+          }),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              const SizedBox(height: 10),
+              Text('Player ${playerIndex + 1}',
+                  style: const TextStyle(color: Colors.white)),
+            ],
+          ),
+        ),
       ],
-    );
-  }
+    ),
+  );
+}
+
+
 
 
 }

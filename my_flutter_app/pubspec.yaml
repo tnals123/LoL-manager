@@ -63,7 +63,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/champions.json
-    - assets/image/beforeBan.png
     - assets/image/top.png
     - assets/image/jungle.png
     - assets/image/mid.png
