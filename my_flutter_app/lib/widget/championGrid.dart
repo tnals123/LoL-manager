@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_flutter_app/controller/banController.dart';
 import 'package:my_flutter_app/controller/championController.dart';
 import 'package:my_flutter_app/class/champion.dart';
 import 'package:my_flutter_app/widget/bansWidget.dart';
@@ -9,6 +10,7 @@ class ChampionsView extends StatelessWidget {
 
   Widget _buildChampionGrid() {
     final controller = Get.put(ChampionsController());
+    final banController = Get.find<BanController>();
     return Stack(
       children: [
         ScrollbarTheme(
@@ -33,10 +35,20 @@ class ChampionsView extends StatelessWidget {
                   Champion champion = controller.champions[index];
                   return Column(
                     children: [
-                      SizedBox(
-                        width: 70.0,
-                        height: 70.0,
+                      GestureDetector(
+                        onTap: () {
+                          if(banController.isBanPhase.value){
+                              if(banController.currentStep.isOdd){
+                               banController. blueTeamBans[5 - (banController.currentStep + 1) ~/ 2]['champion'] = '${champion.id}';
+                              }
+                              else{
+                                banController.redTeamBans[(banController.currentStep ~/ 2) - 1]['champion'] = '${champion.id}';
+                              }
+                          }
+                        },
                         child: Container(
+                          width: 70.0,
+                          height: 70.0,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.red,
@@ -72,7 +84,15 @@ class ChampionsView extends StatelessWidget {
               width: 200,
               child: ElevatedButton(
                 onPressed: () {
-                  // 버튼 클릭 시 수행할 로직
+                  if(banController.currentStep.isOdd){
+                      banController.blueTeamBans[5 - (banController.currentStep + 1) ~/ 2]['state'] = 'normal';
+                      banController.proceedToNextStep();
+                    }
+                    else{
+                      banController.redTeamBans[(banController.currentStep ~/ 2) - 1]['state'] = 'normal';
+                      banController.proceedToNextStep();
+                    }
+
                 },
                 child: Text("선택"),
               ),

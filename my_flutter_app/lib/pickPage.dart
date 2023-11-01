@@ -39,19 +39,26 @@ class PickPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.9),
-      body: Stack(children: [ Column(
+      body: Stack(children: [ 
+        Column(
         children: [
-                Obx(() => championController.showBlueTeamBoxes.value 
-            ? _buildTeamBoxes(isBlueTeam: true) : Container()), // 블루팀 박스
-      Obx(() => championController.showRedTeamBoxes.value 
-            ? _buildTeamBoxes(isBlueTeam: false) : Container()), 
           Expanded(
-              flex: 4,
+              flex: 5,
               child: Row(
                 children: [
-                  const Expanded(
-                    flex: 3,
-                    child: SizedBox(),
+                     Expanded(
+                        flex: 3,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 0, // 상단에 위치
+                              left: 0, // 오른쪽에 위치
+                              child: Obx(
+                                () => _buildSelectedBoxes(championController.leftSelectedChampions, true),
+                              ),
+                            ),
+                          ],
+                        ),
                   ),
                   Expanded(flex: 4, child:
                   Expanded(
@@ -62,17 +69,38 @@ class PickPage extends StatelessWidget {
                       ),
             
                   ),),
-                  const Expanded(flex: 3, child: SizedBox())
+                  Expanded(
+                    flex: 3,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0, // 상단에 위치
+                          right: 0, // 오른쪽에 위치
+                          child: Obx(
+                            () => _buildSelectedBoxes(championController.rightSelectedChampions, false),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               )),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [BansWidget(),BansWidget()],
+                children: [
+                  BansWidget(isBlueTeam: true),
+                  BansWidget(isBlueTeam: false)
+                ],
               ),
+
+
+              // 챔피언 선택 UI (여기에 챔피언 선택 로직 추가)
+              
+              // 레드팀 BansWidget
+
           TimerBar(), // 타임 바
           Expanded(
-              flex: 1,
+              flex: 2,
               child: Container(
                 color: const Color(0xFF171220),
                 child: Row(
@@ -100,30 +128,28 @@ class PickPage extends StatelessWidget {
                 ),
               )),
         ],
-      ),],)
+      ),
+      ],)
     );
   }
 
-  Widget _buildTeamBoxes({required bool isBlueTeam}) {
-    // 박스를 표시하는 위젯 구현
-    return Container(
-      width: double.infinity,
-      height: 200, // 박스 높이 설정
-      child: ListView.builder(
-        itemCount: 5, // 5개의 박스
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          // 박스 내용 구현
-          return Container(
-            width: 100,
-            margin: EdgeInsets.all(10),
-            color: isBlueTeam ? Colors.blue : Colors.red,
-            // 여기에 선수 정보 등 추가
-          );
-        },
+  Widget _buildSelectedBoxes(List<bool> selections, bool isLeft) {
+    return SingleChildScrollView(
+      child: Column(
+        children: List.generate(5, (index) {
+          if (selections[index]) {
+            return Container(
+              width: Get.width / 5,
+              height: 200,
+              color: isLeft ? Colors.blue : Colors.red,
+            );
+          }
+          return Container();
+        }),
       ),
     );
   }
+
 
   Widget _buildTeamNamesSection() {
     return const Column(
@@ -184,25 +210,62 @@ class PickPage extends StatelessWidget {
 
  Widget _buildPlayerItem(int playerIndex, bool isBlueTeam) {
     final championController = Get.put(ChampionsController());
+
+  void _toggleSelection() {
+    if (isBlueTeam) {
+      championController.leftSelectedChampions[playerIndex] = !championController.leftSelectedChampions[playerIndex];
+    } else {
+      championController.rightSelectedChampions[playerIndex] = !championController.rightSelectedChampions[playerIndex];
+    }
+  }
+
+    // Add the champion to the ban list and set the next ban state to blinking
+    // if(championController.banInProgress.value) {
+    //   if(isBlueTeam && championController.currentBlueBanIndex < 5) {
+    //     championController.blueTeamBans[championController.currentBlueBanIndex] = championController.selectedChampions[playerIndex];
+    //     championController.currentBlueBanIndex++;
+    //     if(championController.currentBlueBanIndex == 5) {
+    //       championController.banInProgress.value = false;  // End of blue team's bans
+    //     } else {
+    //       // Set the next ban state to blinking
+    //       championController.blueTeamBans[championController.currentBlueBanIndex].state = BanState.blinking;
+    //     }
+    //   } else if(!isBlueTeam && championController.currentRedBanIndex < 5) {
+    //     championController.redTeamBans[championController.currentRedBanIndex] = championController.selectedChampions[playerIndex];
+    //     championController.currentRedBanIndex++;
+    //     if(championController.currentRedBanIndex == 5) {
+    //       championController.banInProgress.value = false;  // End of red team's bans
+    //     } else {
+    //       // Set the next ban state to blinking
+    //       championController.redTeamBans[championController.currentRedBanIndex].state = BanState.blinking;
+    //     }
+    //   }
+    // }
+
   return Container(
     color: const Color(0xFF171220),
     padding: const EdgeInsets.symmetric(horizontal: 16.0),
     child: Stack(
       children: [
         // 플레이어 위치에 따른 이미지
-            Align(
-      alignment: Alignment.topRight,
-      child: InkWell(
-        onTap: () => championController.toggleTeamBoxes(isBlueTeam),
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: Colors.blueGrey, // 버튼 배경 색
-            shape: BoxShape.circle,
-          ),
-          child: Icon(Icons.add, size: 18, color: Colors.white), // 버튼 아이콘
-        ))),
+        Align(
+          alignment: Alignment.topRight,
+          child: Obx(() => InkWell(
+            onTap: _toggleSelection,
+            child: Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: (isBlueTeam 
+                  ? championController.leftSelectedChampions[playerIndex] 
+                  : championController.rightSelectedChampions[playerIndex]) 
+                  ? Colors.green : Colors.blueGrey,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(Icons.add, size: 18, color: Colors.white),
+            )
+          )),
+        ),
         Align(
           alignment: Alignment.center,
           child: Image.asset(_getImageForPlayer(playerIndex, isBlueTeam)),
