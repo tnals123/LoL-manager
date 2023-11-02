@@ -6,7 +6,7 @@ class BanController extends GetxController {
   int currentStep = 0;
   // 이거 토대로 ui짜자 
   RxBool isBanPhase = false.obs;
-
+  RxBool asdf = false.obs;
 
   // 각 팀에 대한 벤 및 픽 리스트
   RxList<Map<String, String>> blueTeamBans = List.generate(
@@ -18,6 +18,7 @@ class BanController extends GetxController {
     5,
     (_) => {'champion': '', 'state': 'normal'},
   ).obs;
+
   List<String> blueTeamPicks = [];
   List<String> redTeamPicks = [];
   var isBlinking = false.obs;
@@ -43,6 +44,9 @@ class BanController extends GetxController {
     redTeamPicks.clear();
     isBanPhase(true);
 
+    redTeamBans[0]['state'] = 'blinking';
+    asdf(true);
+    
     // 드래프트 과정 시작
     proceedToNextStep();
   }
@@ -53,7 +57,7 @@ class BanController extends GetxController {
 
     switch (currentStep) {
       case 1: // 첫 번째 벤
-      case 2: // 두 번째 벤
+      case 2: // 두 번째 벤 
       case 3: // 세 번째 벤
       case 4: // 네 번째 벤
       case 5: // 다섯 번째 벤
@@ -83,7 +87,10 @@ class BanController extends GetxController {
       blueTeamBans[5 - (currentStep + 1) ~/ 2]['state'] = 'blinking';
     }
     else{
+    print("우히히");
       redTeamBans[(currentStep ~/ 2) - 1]['state'] = 'blinking';
+              print(blueTeamBans);
+              update();
     }
   }
 

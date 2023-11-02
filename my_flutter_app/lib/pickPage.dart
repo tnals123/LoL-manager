@@ -4,6 +4,7 @@ import 'package:my_flutter_app/widget/bansWidget.dart';
 import 'package:my_flutter_app/widget/timeBar.dart';
 import 'package:my_flutter_app/widget/championGrid.dart';
 import 'package:my_flutter_app/controller/championController.dart';
+import 'package:my_flutter_app/controller/banController.dart';
 
 //flutter run -d web-server --web-port 8080
 // lsof -i :8080
@@ -34,6 +35,7 @@ String _getImageForPlayer(int playerIndex, bool isBlueTeam) {
 
 class PickPage extends StatelessWidget {
   final championController = Get.put(ChampionsController());
+  final BanController controller = Get.put(BanController());
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +91,7 @@ class PickPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   BansWidget(isBlueTeam: true),
-                  BansWidget(isBlueTeam: false)
+                  BansWidget(isBlueTeam: false),
                 ],
               ),
 

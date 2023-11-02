@@ -22,7 +22,7 @@ class BansWidget extends StatelessWidget {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: banData['state'] == 'blinking' && controller.isBlinking.value
+              color: banData['state'] == 'blinking' && controller.isBlinking.value && controller.currentStep > 0
                   ? (isBlueTeam ? Colors.blue : Colors.red)
                   : Colors.transparent,
             ),
@@ -32,7 +32,7 @@ class BansWidget extends StatelessWidget {
                 Positioned.fill(
                   child: AnimatedOpacity(
                     duration: Duration(milliseconds: 300),
-                    opacity: (banData['state'] == 'blinking' && controller.isBlinking.value) ? 0.5 : 1.0, // 깜박임 효과 적용
+                    opacity: (banData['state'] == 'blinking' && controller.isBlinking.value) && controller.currentStep > 0 ? 0.5 : 1.0, // 깜박임 효과 적용
                     child: Image.network(
                       "https://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${banData['champion']}.png",
                       fit: BoxFit.cover,
