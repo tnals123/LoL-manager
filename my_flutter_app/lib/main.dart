@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_app/pickPage.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
-
 import 'package:logger/logger.dart';
 
 final logger = Logger();
@@ -18,7 +17,7 @@ void someFunction() {
   logger.d("This is a debug message");
 }
 
-void main() {
+void main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight]);
   someFunction();
   runApp(MyApp2());
