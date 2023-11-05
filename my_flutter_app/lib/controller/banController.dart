@@ -18,6 +18,16 @@ class BanController extends GetxController {
     (_) => {'champion': '', 'state': 'normal'},
   ).obs;
 
+  RxList<Map<String, dynamic>> blueTeamPlayers = List.generate(
+    5,
+    (_) => {'champion': '', 'state': 'normal'},
+  ).obs;
+
+  RxList<Map<String, dynamic>> redTeamPlayers = List.generate(
+    5,
+    (_) => {'champion': '', 'state': 'normal'},
+  ).obs;
+
   List<String> blueTeamPicks = [];
   List<String> redTeamPicks = [];
   var isBlinking = false.obs;

@@ -14,36 +14,53 @@ class BansWidget extends StatelessWidget {
     return Obx(() {
       List<Widget> children = [];
       for (int i = 0; i < 5; i++) {
-        // 벤 위젯 추가
         var banData = isBlueTeam ? controller.blueTeamBans[i] : controller.redTeamBans[i];
         children.add(
-          AnimatedContainer(
-            duration: Duration(milliseconds: 300),
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: banData['state'] == 'blinking' && controller.isBlinking.value 
-                  ? (isBlueTeam ? Colors.blue : Colors.red)
-                  : Colors.transparent,
-            ),
-            child: Stack(
-              children: [
-              if (banData['champion']!.isNotEmpty) 
-                Positioned.fill(
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 300),
-                    opacity: (banData['state'] == 'blinking' && controller.isBlinking.value) ? 0.5 : 1.0, // 깜박임 효과 적용
-                    child: Image.network(
-                      "https://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${banData['champion']}.png",
-                      fit: BoxFit.cover,
+          Stack(
+            children: [
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                width: 60,
+                height: 60,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                ),
+                child: banData['champion']!.isNotEmpty
+                    ? Image.network(
+                        "https://ddragon.leagueoflegends.com/cdn/13.19.1/img/champion/${banData['champion']}.png",
+                        fit: BoxFit.cover,
+                      )
+                    : CustomPaint(painter: SlashPainter()),
+              ),
+              // 반짝이는 효과를 위한 컨테이너
+              Positioned.fill(
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 300),
+                  opacity: banData['state'] == 'blinking' && controller.isBlinking.value ? 1.0 : 0.0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      colors: [
+                        isBlueTeam ?Color(0xFF5D4EC5) : Color(0xFF92252A), // 아래쪽 색상 (불투명)
+                        isBlueTeam ?Color(0xFF5D4EC5).withOpacity(0.75) : Color(0xFF92252A).withOpacity(0.75),
+                        isBlueTeam ?Color(0xFF5D4EC5).withOpacity(0.625) : Color(0xFF92252A).withOpacity(0.625),
+                        isBlueTeam ?Color(0xFF5D4EC5).withOpacity(0.5) : Color(0xFF92252A).withOpacity(0.5),
+                        isBlueTeam ?Color(0xFF5D4EC5).withOpacity(0.375) : Color(0xFF92252A).withOpacity(0.375),
+                        isBlueTeam ? Color(0xFF5D4EC5).withOpacity(0.25) : Color(0xFF92252A).withOpacity(0.25),
+                        isBlueTeam ? Color(0xFF5D4EC5).withOpacity(0.125) : Color(0xFF92252A).withOpacity(0.125),
+                        isBlueTeam ?Color(0xFF5D4EC5).withOpacity(0.125) : Color(0xFF92252A).withOpacity(0.125),
+                        isBlueTeam ?Color(0xFF5D4EC5).withOpacity(0.03) : Color(0xFF92252A).withOpacity(0.03)// 위쪽 색상 (완전 투명)
+                      ],
+                    stops: [0.0, 1/8, 2/8, 3/8, 4/8, 5/8, 6/8, 7/8, 1.0],
+
+                      ),
                     ),
                   ),
                 ),
-                Positioned.fill(
-                  child: CustomPaint(painter: SlashPainter()),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
 
@@ -52,9 +69,9 @@ class BansWidget extends StatelessWidget {
           children.add(
             Container(
               width: 2,
-              height: 60, // 높이를 벤 위젯과 동일하게 설정
+              height: 60,
               color: Color(0xFF453A3A),
-              margin: const EdgeInsets.only(top: 4,bottom: 4),
+              margin: const EdgeInsets.only(top: 4, bottom: 4),
             ),
           );
         }
@@ -64,6 +81,7 @@ class BansWidget extends StatelessWidget {
     });
   }
 }
+
 
 class SlashPainter extends CustomPainter {
   @override

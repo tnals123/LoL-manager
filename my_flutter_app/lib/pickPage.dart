@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_flutter_app/widget/bansWidget.dart';
+import 'package:my_flutter_app/widget/pickWidget.dart';
 import 'package:my_flutter_app/widget/timeBar.dart';
 import 'package:my_flutter_app/widget/championGrid.dart';
 import 'package:my_flutter_app/controller/championController.dart';
@@ -8,7 +9,7 @@ import 'package:my_flutter_app/controller/banController.dart';
 
 //flutter run -d web-server --web-port 8080
 // lsof -i :8080
-// kill -9 8080
+// kill -9 8080 
 
 String _getImageForPlayer(int playerIndex, bool isBlueTeam) {
   List<String> blueTeamOrder = [    
@@ -95,10 +96,6 @@ class PickPage extends StatelessWidget {
                 ],
               ),
 
-
-              // 챔피언 선택 UI (여기에 챔피언 선택 로직 추가)
-              
-              // 레드팀 BansWidget
 
           TimerBar(), // 타임 바
           Expanded(
@@ -203,110 +200,16 @@ class PickPage extends StatelessWidget {
             );
           }
           return Expanded(
-            child: _buildPlayerItem(index ~/ 2, isBlueTeam),
+            child: PickWidget(isBlueTeam : isBlueTeam, playerIndex : index ~/ 2,),
           );
         }),
       ),
     );
 }
 
- Widget _buildPlayerItem(int playerIndex, bool isBlueTeam) {
-    final championController = Get.put(ChampionsController());
-
-  void _toggleSelection() {
-    if (isBlueTeam) {
-      championController.leftSelectedChampions[playerIndex] = !championController.leftSelectedChampions[playerIndex];
-    } else {
-      championController.rightSelectedChampions[playerIndex] = !championController.rightSelectedChampions[playerIndex];
-    }
-  }
-
-    // Add the champion to the ban list and set the next ban state to blinking
-    // if(championController.banInProgress.value) {
-    //   if(isBlueTeam && championController.currentBlueBanIndex < 5) {
-    //     championController.blueTeamBans[championController.currentBlueBanIndex] = championController.selectedChampions[playerIndex];
-    //     championController.currentBlueBanIndex++;
-    //     if(championController.currentBlueBanIndex == 5) {
-    //       championController.banInProgress.value = false;  // End of blue team's bans
-    //     } else {
-    //       // Set the next ban state to blinking
-    //       championController.blueTeamBans[championController.currentBlueBanIndex].state = BanState.blinking;
-    //     }
-    //   } else if(!isBlueTeam && championController.currentRedBanIndex < 5) {
-    //     championController.redTeamBans[championController.currentRedBanIndex] = championController.selectedChampions[playerIndex];
-    //     championController.currentRedBanIndex++;
-    //     if(championController.currentRedBanIndex == 5) {
-    //       championController.banInProgress.value = false;  // End of red team's bans
-    //     } else {
-    //       // Set the next ban state to blinking
-    //       championController.redTeamBans[championController.currentRedBanIndex].state = BanState.blinking;
-    //     }
-    //   }
-    // }
-
-  return Container(
-    color: const Color(0xFF171220),
-    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-    child: Stack(
-      children: [
-        // 플레이어 위치에 따른 이미지
-        Align(
-          alignment: Alignment.topRight,
-          child: Obx(() => InkWell(
-            onTap: _toggleSelection,
-            child: Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: (isBlueTeam 
-                  ? championController.leftSelectedChampions[playerIndex] 
-                  : championController.rightSelectedChampions[playerIndex]) 
-                  ? Colors.green : Colors.blueGrey,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.add, size: 18, color: Colors.white),
-            )
-          )),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Image.asset(_getImageForPlayer(playerIndex, isBlueTeam)),
-        ),
-        Positioned.fill(
-          child: Obx(() {
-            final championId =
-                championController.selectedChampions[playerIndex];
-            if (championId != null) {
-              return Transform.scale(
-                scale: 0.95,
-                child: Image.network(
-                  'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${championId}_0.jpg',
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, -0.68),
-                ),
-              );
-            } else {
-              return Container();
-            }
-          }),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const SizedBox(height: 10),
-              Text('Player ${playerIndex + 1}',
-                  style: const TextStyle(color: Colors.white)),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
 }
 
 
 
 
-}
+
