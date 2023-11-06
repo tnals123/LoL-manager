@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:my_flutter_app/controller/banController.dart';
 import 'package:my_flutter_app/controller/championController.dart';
 import 'package:my_flutter_app/class/champion.dart';
+import 'package:my_flutter_app/controller/timeController.dart';
 import 'package:my_flutter_app/widget/bansWidget.dart';
 
 class ChampionsView extends StatelessWidget {
@@ -38,12 +39,32 @@ class ChampionsView extends StatelessWidget {
                       GestureDetector(
                         onTap: () {
                           if(banController.isBanPhase.value){
-                              if(banController.currentStep.isOdd){
+                              if(banController.currentStep.isOdd && banController.currentStep <= 6){
                                banController. blueTeamBans[5 - (banController.currentStep + 1) ~/ 2]['champion'] = '${champion.id}';
                               }
-                              else{
+                              else if (banController.currentStep.isEven && banController.currentStep <= 6){
                                 banController.redTeamBans[(banController.currentStep ~/ 2) - 1]['champion'] = '${champion.id}';
                               }
+                              else if(banController.currentStep > 6 && banController.currentStep <= 12){
+                                  if (banController.currentStep == 7) {
+                                    banController.blueTeamPlayers[4]['champion'] = '${champion.id}';
+
+                                  } else if (banController.currentStep == 8) {
+                                    banController.redTeamPlayers[0]['champion'] = '${champion.id}';
+
+                                  } else if (banController.currentStep == 9) {
+                                    banController.redTeamPlayers[1]['champion'] = '${champion.id}';
+
+                                  } else if (banController.currentStep == 10) {
+                                    banController.blueTeamPlayers[3]['champion'] = '${champion.id}';
+                                  }
+                                    else if (banController.currentStep == 11) {
+                                    banController.blueTeamPlayers[2]['champion'] = '${champion.id}';
+
+                                  } else if (banController.currentStep == 12) {
+                                    banController.redTeamPlayers[2]['champion'] = '${champion.id}';
+                                  }
+                                }
                           }
                         },
                         child: Container(
@@ -84,14 +105,37 @@ class ChampionsView extends StatelessWidget {
               width: 200,
               child: ElevatedButton(
                 onPressed: () {
-                  if(banController.currentStep.isOdd){
+                  final TimerController timerController = Get.find<TimerController>();
+                  timerController.resetTimer(); // 타이머를 초기화하는 메서드 호출
+                  if(banController.currentStep.isOdd && banController.currentStep <= 6){
                       banController.blueTeamBans[5 - (banController.currentStep + 1) ~/ 2]['state'] = 'normal';
                       banController.proceedToNextStep();
                     }
-                    else{
+                  else if (banController.currentStep.isEven && banController.currentStep <= 6){
                       banController.redTeamBans[(banController.currentStep ~/ 2) - 1]['state'] = 'normal';
                       banController.proceedToNextStep();
                     }
+                  else if(banController.currentStep > 6 && banController.currentStep <= 12){
+                      if (banController.currentStep == 7) {
+                        banController.blueTeamPlayers[4]['state'] = 'normal';
+
+                      } else if (banController.currentStep == 8) {
+                        banController.redTeamPlayers[0]['state'] = 'normal';
+
+                      } else if (banController.currentStep == 9) {
+                        banController.redTeamPlayers[1]['state'] = 'normal';
+
+                      } else if (banController.currentStep == 10) {
+                        banController.blueTeamPlayers[3]['state'] = 'normal';
+                      }
+                        else if (banController.currentStep == 11) {
+                        banController.blueTeamPlayers[2]['state'] = 'normal';
+
+                      } else if (banController.currentStep == 12) {
+                        banController.redTeamPlayers[2]['state'] = 'normal';
+                      }
+                      banController.proceedToNextStep();
+                  }
 
                 },
                 child: Text("선택"),

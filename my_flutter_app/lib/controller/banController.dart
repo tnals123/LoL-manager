@@ -57,12 +57,16 @@ class BanController extends GetxController {
     for (var i = 0; i < 5; i++) {
       blueTeamBans[i]['state'] = 'blinking';
       redTeamBans[i]['state'] = 'blinking';
+      blueTeamPlayers[i]['state'] = 'blinking';
+      redTeamPlayers[i]['state'] = 'blinking';
     }
 
     await Future.delayed(Duration(seconds: 1));
       for (var i = 0; i < 5; i++) {
         blueTeamBans[i]['state'] = 'normal';
         redTeamBans[i]['state'] = 'normal';
+        blueTeamPlayers[i]['state'] = 'normal';
+        redTeamPlayers[i]['state'] = 'normal';
     }
 
     // redTeamBans[currentStep]['state'] = 'blinking';
@@ -87,13 +91,11 @@ class BanController extends GetxController {
       case 7: // 두 번째와 세 번째 픽
       case 8: // 네 번째와 다섯 번째 픽
       case 9: // 여섯 번째 픽
-        _pickPhase();
-        break;
       case 10: // 추가 벤
-        _additionalBanPhase();
-        break;
       case 11: // 일곱 번째 픽
       case 12: // 여덟 번째와 아홉 번째 픽
+      _pickPhase();
+        break;
       case 13: // 열 번째 픽
         _finalPickPhase();
         break;
@@ -107,16 +109,32 @@ class BanController extends GetxController {
       blueTeamBans[5 - (currentStep + 1) ~/ 2]['state'] = 'blinking';
     }
     else{
-    print("우히히");
       redTeamBans[(currentStep ~/ 2) - 1]['state'] = 'blinking';
-              print(blueTeamBans);
-              update();
     }
   }
 
   void _pickPhase() {
-    // 여기에 픽 로직 구현
+
+    if (currentStep == 7) {
+      blueTeamPlayers[4]['state'] = 'blinking';
+
+    } else if (currentStep == 8) {
+      redTeamPlayers[0]['state'] = 'blinking';
+
+    } else if (currentStep == 9) {
+      redTeamPlayers[1]['state'] = 'blinking';
+
+    } else if (currentStep == 10) {
+      blueTeamPlayers[3]['state'] = 'blinking';
+    }
+      else if (currentStep == 11) {
+      blueTeamPlayers[2]['state'] = 'blinking';
+
+    } else if (currentStep == 12) {
+      redTeamPlayers[2]['state'] = 'blinking';
+    }
   }
+
 
   void _additionalBanPhase() {
     // 추가 벤 로직 구현

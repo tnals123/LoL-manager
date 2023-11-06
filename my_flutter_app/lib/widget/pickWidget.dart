@@ -59,9 +59,9 @@ class PickWidget extends StatelessWidget {
               var playerData = isBlueTeam ? banController.blueTeamPlayers[playerIndex] : banController.redTeamPlayers[playerIndex];
               if (playerData['champion'].isNotEmpty) {
                 return Transform.scale(
-                  scale: 0.95,
+                  scale: 1,
                   child: Image.network(
-                    'http://ddragon.leagueoflegends.com/cdn/img/champion/loading/${playerData['champion']}_0.jpg',
+                    'https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${playerData['champion']}_0.jpg',
                     fit: BoxFit.cover,
                     alignment: const Alignment(0, -0.68),
                   ),
