@@ -40,36 +40,28 @@ class ChampionsView extends StatelessWidget {
                         onTap: () {
                           if(banController.isBanPhase.value){
                               if(banController.currentStep.isOdd && banController.currentStep <= 6){
-                               banController. blueTeamBans[5 - (banController.currentStep + 1) ~/ 2]['champion'] = '${champion.id}';
-                              }
-                              else if (banController.currentStep.isEven && banController.currentStep <= 6){
-                                banController.redTeamBans[(banController.currentStep ~/ 2) - 1]['champion'] = '${champion.id}';
-                              }
-                              else if(banController.currentStep > 6 && banController.currentStep <= 12){
-                                  if (banController.currentStep == 7) {
-                                    banController.blueTeamPlayers[4]['champion'] = '${champion.id}';
-
-                                  } else if (banController.currentStep == 8) {
-                                    banController.redTeamPlayers[0]['champion'] = '${champion.id}';
-
-                                  } else if (banController.currentStep == 9) {
-                                    banController.redTeamPlayers[1]['champion'] = '${champion.id}';
-
-                                  } else if (banController.currentStep == 10) {
-                                    banController.blueTeamPlayers[3]['champion'] = '${champion.id}';
-                                  }
-                                    else if (banController.currentStep == 11) {
-                                    banController.blueTeamPlayers[2]['champion'] = '${champion.id}';
-
-                                  } else if (banController.currentStep == 12) {
-                                    banController.redTeamPlayers[2]['champion'] = '${champion.id}';
-                                  }
+                                  banController.banPhase('champion','${champion.id}');
                                 }
+                              else if (banController.currentStep.isEven && banController.currentStep <= 6){
+                                  banController.banPhase('champion','${champion.id}');
+                                }
+                              else if(banController.currentStep > 6 && banController.currentStep <= 12){
+                                  banController.pickPhase('champion','${champion.id}');
+                              }
+                              else if(banController.currentStep.isOdd && banController.currentStep > 12 && banController.currentStep <= 16){
+                                  banController.banPhase('champion','${champion.id}');
+                                }
+                              else if (banController.currentStep.isEven && banController.currentStep > 12 && banController.currentStep <= 16){
+                                  banController.banPhase('champion','${champion.id}');
+                                }
+                              else if(banController.currentStep > 16 && banController.currentStep <= 20){
+                                  banController.pickPhase('champion','${champion.id}');
+                              }
                           }
                         },
                         child: Container(
-                          width: 70.0,
-                          height: 70.0,
+                          width: Get.width * (16 / 375),
+                          height: Get.width * (16 / 375),
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.red,
@@ -87,7 +79,7 @@ class ChampionsView extends StatelessWidget {
                         champion.name,
                         textAlign: TextAlign.center,
                         style:
-                            const TextStyle(fontSize: 12, color: Colors.white),
+                           TextStyle(fontSize: Get.width * (2.5 / 375), color: Colors.white),
                       ),
                     ],
                   );
@@ -108,34 +100,24 @@ class ChampionsView extends StatelessWidget {
                   final TimerController timerController = Get.find<TimerController>();
                   timerController.resetTimer(); // 타이머를 초기화하는 메서드 호출
                   if(banController.currentStep.isOdd && banController.currentStep <= 6){
-                      banController.blueTeamBans[5 - (banController.currentStep + 1) ~/ 2]['state'] = 'normal';
-                      banController.proceedToNextStep();
+                      banController.banPhase('state','normal');
                     }
                   else if (banController.currentStep.isEven && banController.currentStep <= 6){
-                      banController.redTeamBans[(banController.currentStep ~/ 2) - 1]['state'] = 'normal';
-                      banController.proceedToNextStep();
+                      banController.banPhase('state','normal');
                     }
                   else if(banController.currentStep > 6 && banController.currentStep <= 12){
-                      if (banController.currentStep == 7) {
-                        banController.blueTeamPlayers[4]['state'] = 'normal';
-
-                      } else if (banController.currentStep == 8) {
-                        banController.redTeamPlayers[0]['state'] = 'normal';
-
-                      } else if (banController.currentStep == 9) {
-                        banController.redTeamPlayers[1]['state'] = 'normal';
-
-                      } else if (banController.currentStep == 10) {
-                        banController.blueTeamPlayers[3]['state'] = 'normal';
-                      }
-                        else if (banController.currentStep == 11) {
-                        banController.blueTeamPlayers[2]['state'] = 'normal';
-
-                      } else if (banController.currentStep == 12) {
-                        banController.redTeamPlayers[2]['state'] = 'normal';
-                      }
-                      banController.proceedToNextStep();
+                      banController.pickPhase('state','normal');
                   }
+                  else if(banController.currentStep.isOdd && banController.currentStep > 12 && banController.currentStep <= 16){
+                      banController.banPhase('state','normal');
+                    }
+                  else if (banController.currentStep.isEven && banController.currentStep > 12 && banController.currentStep <= 16){
+                      banController.banPhase('state','normal');
+                    }
+                  else if(banController.currentStep > 16 && banController.currentStep <= 20){
+                      banController.pickPhase('state','normal');
+                  }
+                  banController.proceedToNextStep();
 
                 },
                 child: Text("선택"),

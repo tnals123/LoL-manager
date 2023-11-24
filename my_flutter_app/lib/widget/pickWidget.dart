@@ -111,8 +111,8 @@ class PickWidget extends StatelessWidget {
                   print("afsdfsadfsafasasf");
                 },
                 child: Container(
-                  width: 30,
-                  height: 30,
+                  width: Get.width * (8 / 375),
+                  height: Get.width * (8 / 375),
                   decoration: BoxDecoration(
                     color: (isBlueTeam 
                       ? championController.leftSelectedChampions[playerIndex] 
@@ -133,7 +133,7 @@ class PickWidget extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Text('Player ${playerIndex + 1}',
-                    style: const TextStyle(color: Colors.white)),
+                    style: TextStyle(color: Colors.white, fontSize: Get.width * (3 / 375))),
               ],
             ),
           ),

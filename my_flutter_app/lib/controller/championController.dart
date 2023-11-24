@@ -18,7 +18,6 @@ class ChampionsController extends GetxController {
   }
 
 
-  
   Future<void> fetchChampionsFromAsset() async {
     try {
 

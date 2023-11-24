@@ -151,7 +151,7 @@ class PickPage extends StatelessWidget {
 
 
   Widget _buildTeamNamesSection() {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch, // 가로축을 꽉 채우도록
       children: [
         // 상단에 위치할 텍스트들
@@ -159,11 +159,11 @@ class PickPage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
                 color: Colors.white,
-                fontSize: 13,
+                fontSize: Get.width * (2.7 / 375),
                 fontWeight: FontWeight.bold)),
         Text("PATCH 13.20",
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 13)),
+            style: TextStyle(color: Colors.white, fontSize: Get.width * (2.7 / 375),)),
         Expanded(
           child: Center(
             // Center 위젯으로 감싸서 중앙에 위치하도록 함
@@ -172,18 +172,18 @@ class PickPage extends StatelessWidget {
               children: [
                 Text(
                   "팀 A",
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  style: TextStyle(color: Colors.white, fontSize: Get.width * (4 / 375),),
                 ),
-                SizedBox(width: 20), // 팀 이름 사이 간격
+                SizedBox(width: Get.width * (4 / 375)), // 팀 이름 사이 간격
                 Text(
                   "팀 B",
-                  style: TextStyle(color: Colors.white, fontSize: 24),
+                  style: TextStyle(color: Colors.white, fontSize: Get.width * (4 / 375),),
                 ),
               ],
             ),
           ),
         ),
-        Padding(padding: EdgeInsets.only(bottom: 20))
+        const Padding(padding: EdgeInsets.only(bottom: 20))
       ],
     );
   }

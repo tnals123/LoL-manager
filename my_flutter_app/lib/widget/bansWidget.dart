@@ -20,8 +20,8 @@ class BansWidget extends StatelessWidget {
             children: [
               AnimatedContainer(
                 duration: Duration(milliseconds: 300),
-                width: 60,
-                height: 60,
+                width: Get.width * (15 / 375),
+                height: Get.width * (15 / 375),
                 decoration: BoxDecoration(
                   color: Colors.transparent,
                 ),
@@ -69,7 +69,7 @@ class BansWidget extends StatelessWidget {
           children.add(
             Container(
               width: 2,
-              height: 60,
+              height: Get.width * (15 / 375),
               color: Color(0xFF453A3A),
               margin: const EdgeInsets.only(top: 4, bottom: 4),
             ),
